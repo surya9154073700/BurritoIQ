@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const duckdb = require('duckdb');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const port = process.env.PORT || 10000;
@@ -9,6 +10,8 @@ const parquet = path.resolve(__dirname, '..', 'data', 'processed', 'cleaned.parq
 const db = new duckdb.Database(':memory:');
 app.use(cors());
 app.use(express.json());
+const clientBuild = path.resolve(__dirname, '..', 'dist');
+if (fs.existsSync(clientBuild)) app.use(express.static(clientBuild));
 
 function query(sql, params = []) {
   return new Promise((resolve, reject) => db.all(sql, ...params, (error, rows) => error ? reject(error) : resolve(rows)));
@@ -46,5 +49,7 @@ app.get('/api/metadata', async (_req, res) => {
     sendJson(res, rows[0]);
   } catch (error) { res.status(500).json({ error: error.message }); }
 });
-app.get('/', (_req, res) => res.type('html').send('<h1>BurritoIQ API</h1><p>Skeleton deployment is healthy. Use <code>/health</code> and <code>/api/summary</code>.</p>'));
+app.use((_req, res) => fs.existsSync(path.join(clientBuild, 'index.html'))
+  ? res.sendFile(path.join(clientBuild, 'index.html'))
+  : res.type('html').send('<h1>BurritoIQ API</h1><p>Skeleton deployment is healthy.</p>'));
 app.listen(port, () => console.log(`BurritoIQ API listening on ${port}`));
