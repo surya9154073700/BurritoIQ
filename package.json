@@ -1,0 +1,28 @@
+{
+  "name": "burritoiq",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "etl": "node scripts/etl.js",
+    "start": "node backend/server.js",
+    "dev": "concurrently \"npm run api\" \"npm run web\"",
+    "api": "node backend/server.js",
+    "web": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "test": "node --test tests/*.test.js"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "cors": "latest",
+    "duckdb": "latest",
+    "express": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "recharts": "latest",
+    "vite": "latest",
+    "xlsx": "latest"
+  },
+  "devDependencies": {
+    "concurrently": "latest"
+  }
+}

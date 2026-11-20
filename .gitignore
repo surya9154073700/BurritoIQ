@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+data/raw/
+*.xlsx
+*.xls
+*.xlsm
+*.csv
+data/processed/*.csv
+
