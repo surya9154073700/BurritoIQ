@@ -49,6 +49,20 @@ app.get('/api/metadata', async (_req, res) => {
     sendJson(res, rows[0]);
   } catch (error) { res.status(500).json({ error: error.message }); }
 });
+app.get('/api/monthly', async (req, res) => {
+  try {
+    const { clause, params } = filters(req.query);
+    const rows = await query(`SELECT strftime(order_datetime, '%Y-%m') AS month, sum(line_revenue) AS revenue, count(DISTINCT bill_no) AS orders FROM read_parquet('${parquet}') ${clause} GROUP BY 1 ORDER BY 1`, params);
+    sendJson(res, rows.map((row) => ({ ...row, partial: row.month === '2025-06' || row.month === '2026-06' })));
+  } catch (error) { res.status(500).json({ error: error.message }); }
+});
+app.get('/api/outlets', async (req, res) => {
+  try {
+    const { clause, params } = filters(req.query);
+    const rows = await query(`SELECT outlet_name AS outlet, sum(line_revenue) AS revenue, count(DISTINCT bill_no) AS orders, sum(quantity) AS items_sold FROM read_parquet('${parquet}') ${clause} GROUP BY 1 ORDER BY revenue DESC`, params);
+    sendJson(res, rows);
+  } catch (error) { res.status(500).json({ error: error.message }); }
+});
 app.use((_req, res) => fs.existsSync(path.join(clientBuild, 'index.html'))
   ? res.sendFile(path.join(clientBuild, 'index.html'))
   : res.type('html').send('<h1>BurritoIQ API</h1><p>Skeleton deployment is healthy.</p>'));
