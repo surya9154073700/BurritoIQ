@@ -1,5 +1,5 @@
 [build]
-buildCommand = "npm install --include=dev --ignore-scripts=false && echo API skeleton build complete"
+buildCommand = "npm ci && npm run build"
 
 [deploy]
 startCommand = "npm start"

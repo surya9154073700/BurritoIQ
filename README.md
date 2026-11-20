@@ -9,7 +9,7 @@ Decision cockpit for restaurant sales data. It uses an Express API and DuckDB to
 3. `npm run etl -- --source data.xlsx` (the supplied local workbook currently lives at the project root)
 4. `npm run dev`
 
-The API runs on port 10000 and the Vite UI on port 5173.
+The API runs on port 10000 and the Vite UI on port 5175. The Vite dev server proxies `/api` and `/health` to the API; set `VITE_API_PROXY_TARGET` if the API runs on a different host or port. In production, the frontend and API are served from the same origin.
 
 ## Data policy
 
@@ -22,4 +22,3 @@ The raw workbook is intentionally ignored by Git. `data/processed/cleaned.parque
 - Items sold: sum of `Quantity`, including free items
 - AOV: revenue / orders
 - Average selling price: revenue / quantities on non-free lines only
-

@@ -16,7 +16,7 @@ fs.mkdirSync(outputDir, { recursive: true });
 
 function excelDate(serial) {
   if (!Number.isFinite(serial)) return null;
-  return new Date(Math.round((serial - 25569) * 86400) * 1000).toISOString().replace('.000Z', 'Z');
+  return new Date(Math.round((serial - 25569) * 86400) * 1000).toISOString().replace('.000Z', '');
 }
 function billId(value) {
   const numeric = Number(value);

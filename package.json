@@ -7,7 +7,7 @@
     "start": "node backend/server.js",
     "dev": "concurrently \"npm run api\" \"npm run web\"",
     "api": "node backend/server.js",
-    "web": "vite --host 0.0.0.0",
+    "web": "vite --host 127.0.0.1 --port 5175 --strictPort",
     "build": "vite build",
     "test": "node --test tests/*.test.js"
   },
