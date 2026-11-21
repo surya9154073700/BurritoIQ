@@ -22,8 +22,14 @@ const initialFilters = { start: '2025-06-17', end: '2026-06-16', outlet: '', bra
 const fmt = (value) => number.format(Number(value) || 0);
 const fmtDecimal = (value) => decimal.format(Number(value) || 0);
 
+const API_BASE_URL = 'https://burritoiq-1.onrender.com';
+
+function apiUrl(path) {
+  return `${API_BASE_URL}${path}`;
+}
+
 async function request(path, signal) {
-  const response = await fetch(path, { signal });
+  const response = await fetch(apiUrl(path), { signal });
   const contentType = response.headers.get('content-type') || '';
   if (!contentType.includes('application/json')) {
     const body = await response.text();
@@ -105,7 +111,7 @@ function App() {
     setTablePage(1);
   };
 
-  if (metaState.error) return <main className="fatal"><h1>Could not load BurritoIQ data</h1><p>{metaState.error}</p><p>Confirm the API is healthy at port 10000 and refresh this page.</p></main>;
+  if (metaState.error) return <main className="fatal"><h1>Could not load BurritoIQ data</h1><p>{metaState.error}</p><p>Check that the BurritoIQ backend is running on Render.</p></main>;
   if (!meta) return <main className="fatal">Loading restaurant intelligence…</main>;
 
   return (
@@ -267,7 +273,7 @@ function Orders({ analytics, loading }) {
 }
 
 function Explorer({ result, search, setSearch, page, setPage, pageSize, setPageSize, sort, setSort, direction, setDirection, filters }) {
-  const exportUrl = `/api/transactions.csv?${queryString({ ...filters, search })}`;
+  const exportUrl = apiUrl(`/api/transactions.csv?${queryString({ ...filters, search })}`);
   const rows = result?.rows || [];
   return <section className="panel explorer-panel">
     <div className="explorer-toolbar"><div><h2>Transaction explorer</h2><p>Search and page through the filtered line-item ledger.</p></div><a className="export-button" href={exportUrl} download>Export filtered CSV</a></div>
